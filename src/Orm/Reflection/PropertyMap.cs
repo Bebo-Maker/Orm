@@ -23,7 +23,7 @@ namespace Orm.Reflection
       var map = new Dictionary<string, FastPropertyInfo>();
       foreach(var prop in props)
       {
-        var dbColumnAttr = prop.GetCustomAttribute<DbColumnAttribute>();
+        var dbColumnAttr = prop.GetCustomAttribute<ColumnAttribute>();
         map.Add(dbColumnAttr?.Alias ?? prop.Name, prop);
       }
 
