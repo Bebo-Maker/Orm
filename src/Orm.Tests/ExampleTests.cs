@@ -15,7 +15,7 @@ namespace Orm.Tests
     [SetUp]
     public void Setup()
     {
-      _db = Database.Connect(@"Server=localhost\SQLEXPRESS;Database=TestDB;Trusted_Connection=True;");
+      _db = new Database(@"Server=localhost\SQLEXPRESS;Database=TestDB;Trusted_Connection=True;");
     }
 
     [Test]

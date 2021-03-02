@@ -15,12 +15,10 @@ namespace Orm
     private readonly string _connectionString;
     private static readonly IObjectCreator _objectCreator = new ActivatorObjectCreator();
 
-    private Database(string connectionString)
+    public Database(string connectionString)
     {
       _connectionString = connectionString;
     }
-
-    public static Database Connect(string connectionString) => new Database(connectionString);
 
     public List<T> Query<T>(string sqlStatement)
     {

@@ -13,7 +13,7 @@ namespace Orm.Benchmarks
 
     public QueryBenchmarks()
     {
-      _db = Database.Connect(@"Server=localhost\SQLEXPRESS;Database=TestDB;Trusted_Connection=True;");
+      _db = new Database(@"Server=localhost\SQLEXPRESS;Database=TestDB;Trusted_Connection=True;");
     }
 
     [Benchmark]

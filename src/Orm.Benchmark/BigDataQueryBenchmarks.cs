@@ -13,7 +13,7 @@ namespace Orm.Benchmarks
 
     public BigDataQueryBenchmarks()
     {
-      _db = Database.Connect(@"Server=localhost\SQLEXPRESS;Database=TestDB;Trusted_Connection=True;");
+      _db = new Database(@"Server=localhost\SQLEXPRESS;Database=TestDB;Trusted_Connection=True;");
     }
 
     [Benchmark]
