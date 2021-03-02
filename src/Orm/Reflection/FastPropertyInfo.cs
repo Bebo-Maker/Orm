@@ -18,7 +18,6 @@ namespace Orm.Reflection
     delegate object GetValueDelegate(object instance);
 
     private readonly PropertyInfo _property;
-    private readonly GetValueDelegate _getValueImpl;
     private readonly SetValueDelegate _setValueImpl;
 
     protected static readonly Dictionary<Type, OpCode> TypeILCodeCache = new Dictionary<Type, OpCode>
@@ -84,42 +83,7 @@ namespace Orm.Reflection
 
         _setValueImpl = (SetValueDelegate)dm.CreateDelegate(typeof(SetValueDelegate));
       }
-
-      if (property.CanRead)
-      {
-        DynamicMethod dm = new DynamicMethod("GetValueImpl", typeof(object), new Type[] { typeof(object) }, GetType().Module, false);
-        ILGenerator ilgen = dm.GetILGenerator();
-
-        //.locals init (
-        //      object obj1)
-        LocalBuilder result = ilgen.DeclareLocal(typeof(object));
-        //L_0000: nop
-        ilgen.Emit(OpCodes.Nop);
-        //L_0001: ldarg.0
-        ilgen.Emit(OpCodes.Ldarg_0);
-        //L_0002: castclass [declaringType]
-        ilgen.Emit(OpCodes.Castclass, property.DeclaringType);
-        //L_0007: callvirt instance [declaringType] get_[B]()
-        ilgen.EmitCall(OpCodes.Callvirt, property.GetGetMethod(), null);
-
-        //Box if necessary:Yiyi
-        if (property.PropertyType.IsValueType)
-        {
-          ilgen.Emit(OpCodes.Box, property.PropertyType);
-        }
-
-        //L_000c: stloc.0
-        ilgen.Emit(OpCodes.Stloc_0, result);
-        //L_000f: ldloc.0
-        ilgen.Emit(OpCodes.Ldloc_0);
-        //L_0010: ret
-        ilgen.Emit(OpCodes.Ret);
-
-        _getValueImpl = (GetValueDelegate)dm.CreateDelegate(typeof(GetValueDelegate));
-      }
     }
-
-    public object GetValue(object obj) => _getValueImpl(obj);
 
     public void SetValue(object obj, object value) => _setValueImpl(obj, value);
 

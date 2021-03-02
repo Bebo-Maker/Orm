@@ -3,7 +3,7 @@
 namespace Orm.Attributes
 {
   [AttributeUsage(AttributeTargets.Constructor)]
-  public sealed class DbConstructorAttribute : Attribute
+  public sealed class ConstructorAttribute : Attribute
   {
   }
 }

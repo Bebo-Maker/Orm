@@ -10,7 +10,7 @@ namespace Orm.Entities
     public int Number { get; set; }
     public string Name { get; set; }
 
-    [DbColumn("LongText")]
+    [Column("LongText")]
     public string LongggText { get; set; }
   }
 }
