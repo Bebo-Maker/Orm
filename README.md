@@ -1,2 +1,2 @@
 # Orm
-A simple ORM build for fun.
+A simple ORM, just for fun.
