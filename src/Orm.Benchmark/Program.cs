@@ -6,7 +6,7 @@ namespace Orm.Benchmarks
   {
     static void Main(string[] args)
     {
-      var summary = BenchmarkRunner.Run<QueryBenchmarks>();
+      var summary = BenchmarkRunner.Run<BigDataQueryBenchmarks>();
     }
   }
 }
