@@ -21,11 +21,12 @@ namespace Orm.Factories
 
       foreach(var prop in type.GetProperties())
       {
-        var dbColumnAttr = prop.GetCustomAttribute<ColumnAttribute>();
-        cols.Add(dbColumnAttr?.Alias ?? prop.Name, new FastPropertyInfo(prop));
+        var columnAttr = prop.GetCustomAttribute<ColumnAttribute>();
+        cols.Add(columnAttr?.Alias ?? prop.Name, new FastPropertyInfo(prop));
       }
 
-      table = new TableDefinition(type.Name, cols);
+      var tableAttr = type.GetCustomAttribute<TableAttribute>();
+      table = new TableDefinition(tableAttr?.Alias ?? type.Name, cols);
 
       _tableCache.TryAdd(type, table);
       return table;
