@@ -15,7 +15,6 @@ namespace Orm.Reflection
   public class FastPropertyInfo
   {
     delegate void SetValueDelegate(object instance, object value);
-    delegate object GetValueDelegate(object instance);
 
     private readonly PropertyInfo _property;
     private readonly SetValueDelegate _setValueImpl;
@@ -41,8 +40,8 @@ namespace Orm.Reflection
       _property = property;
       if (_property.CanWrite)
       {
-        DynamicMethod dm = new DynamicMethod("SetValueImpl", null, new Type[] { typeof(object), typeof(object) }, GetType().Module, false);
-        ILGenerator ilgen = dm.GetILGenerator();
+        var dm = new DynamicMethod("SetValueImpl", null, new Type[] { typeof(object), typeof(object) }, GetType().Module, false);
+        var ilgen = dm.GetILGenerator();
 
         //L_0000: nop
         ilgen.Emit(OpCodes.Nop);
@@ -86,16 +85,5 @@ namespace Orm.Reflection
     }
 
     public void SetValue(object obj, object value) => _setValueImpl(obj, value);
-
-    /// <summary>
-    /// <see cref="CustomAttributeExtensions.GetCustomAttributes"/>
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public T GetCustomAttribute<T>() where T : Attribute => _property.GetCustomAttribute<T>();
-
-    /// <summary>
-    /// See <see cref="MemberInfo.Name"/>.
-    /// </summary>
-    public string Name => _property.Name;
   }
 }

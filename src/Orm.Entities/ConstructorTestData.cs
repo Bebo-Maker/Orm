@@ -11,7 +11,7 @@ namespace Orm.Entities
     public string Name { get; }
     public string LongText { get; }
 
-    [Constructor]
+    [DatabaseConstructor]
     public ConstructorTestData(int id, DateTime datetime, int number, string name, string longText)
     {
       Id = id;

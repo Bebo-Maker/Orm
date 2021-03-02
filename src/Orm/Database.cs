@@ -60,7 +60,7 @@ namespace Orm
           : HandlePropertyInjectionAsync<T>(reader, type);
     }
 
-    private static ConstructorInfo GetConstructorWithDbConstructorAttribute(Type type) => type.GetConstructors().FirstOrDefault(c => c.CustomAttributes.FirstOrDefault(a => a.AttributeType == typeof(ConstructorAttribute)) != null);
+    private static ConstructorInfo GetConstructorWithDbConstructorAttribute(Type type) => type.GetConstructors().FirstOrDefault(c => c.CustomAttributes.FirstOrDefault(a => a.AttributeType == typeof(DatabaseConstructorAttribute)) != null);
 
     private static List<T> HandleConstructorInjection<T>(SqlDataReader reader, Type type, string[] parameters)
     {
