@@ -3,11 +3,11 @@
 namespace Orm.Attributes
 {
   [AttributeUsage(AttributeTargets.Property)]
-  public class DbColumnAttribute : Attribute
+  public class ColumnAttribute : Attribute
   {
     public string Alias { get; }
 
-    public DbColumnAttribute(string alias)
+    public ColumnAttribute(string alias)
     {
       Alias = alias;
     }

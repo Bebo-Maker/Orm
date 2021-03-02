@@ -1,4 +1,6 @@
 ﻿using Orm.Attributes;
+using Orm.Entities;
+using Orm.Factories;
 using Orm.ObjectCreator;
 using Orm.Reflection;
 using System;
@@ -58,7 +60,7 @@ namespace Orm
           : HandlePropertyInjectionAsync<T>(reader, type);
     }
 
-    private static ConstructorInfo GetConstructorWithDbConstructorAttribute(Type type) => type.GetConstructors().FirstOrDefault(c => c.CustomAttributes.FirstOrDefault(a => a.AttributeType == typeof(DbConstructorAttribute)) != null);
+    private static ConstructorInfo GetConstructorWithDbConstructorAttribute(Type type) => type.GetConstructors().FirstOrDefault(c => c.CustomAttributes.FirstOrDefault(a => a.AttributeType == typeof(ConstructorAttribute)) != null);
 
     private static List<T> HandleConstructorInjection<T>(SqlDataReader reader, Type type, string[] parameters)
     {
@@ -80,7 +82,6 @@ namespace Orm
       return entities;
     }
 
-
     private static T CreateEntity<T>(SqlDataReader reader, Type type, string[] parameters)
     {
       var dbData = new object[reader.FieldCount];
@@ -100,10 +101,10 @@ namespace Orm
     private static List<T> HandlePropertyInjection<T>(SqlDataReader reader, Type type)
     {
       var entities = new List<T>();
-      var propertyMap = PropertyMap.GetOrCreatePropertyMap<T>();
+      var table = TableFactory.GetOrCreateTableDefinition(type);
 
       while (reader.Read())
-        entities.Add(CreateEntity<T>(reader, type, propertyMap));
+        entities.Add(CreateEntity<T>(reader, type, table));
 
       return entities;
     }
@@ -111,21 +112,21 @@ namespace Orm
     private static async Task<List<T>> HandlePropertyInjectionAsync<T>(SqlDataReader reader, Type type)
     {
       var entities = new List<T>();
-      var propertyMap = PropertyMap.GetOrCreatePropertyMap<T>();
+      var table = TableFactory.GetOrCreateTableDefinition(type);
 
       while (await reader.ReadAsync().ConfigureAwait(false))
-        entities.Add(CreateEntity<T>(reader, type, propertyMap));
+        entities.Add(CreateEntity<T>(reader, type, table));
 
       return entities;
     }
 
-    private static T CreateEntity<T>(SqlDataReader reader, Type type, Dictionary<string, FastPropertyInfo> propertyMap)
+    private static T CreateEntity<T>(SqlDataReader reader, Type type, TableDefinition table)
     {
       T entity = _objectCreator.Create<T>(type);
       for (int i = 0; i < reader.FieldCount; i++)
       {
         string fieldName = reader.GetName(i);
-        propertyMap[fieldName]?.SetValue(entity, reader[i]);
+        table.Columns[fieldName]?.SetValue(entity, reader[i]);
       }
 
       return entity;
