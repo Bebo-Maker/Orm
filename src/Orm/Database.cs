@@ -83,7 +83,7 @@ namespace Orm
     private static async Task<List<T>> HandlePropertyInjectionAsync<T>(SqlDataReader reader, Type type)
     {
       var entities = new List<T>();
-      var propertyMap = BuildPropertyMap<T>();
+      var propertyMap = PropertyMap.GetOrCreatePropertyMap<T>();
 
       T entity;
 
@@ -127,7 +127,7 @@ namespace Orm
     private static List<T> HandlePropertyInjection<T>(SqlDataReader reader, Type type)
     {
       var entities = new List<T>();
-      var propertyMap = BuildPropertyMap<T>();
+      var propertyMap = PropertyMap.GetOrCreatePropertyMap<T>();
 
       T entity;
 
@@ -143,20 +143,6 @@ namespace Orm
       }
 
       return entities;
-    }
-
-    private static Dictionary<string, FastPropertyInfo> BuildPropertyMap<T>()
-    {
-      var props = PropertyAccessor<T>.Properties;
-      var propertyMap = new Dictionary<string, FastPropertyInfo>();
-      for (int i = 0; i < props.Length; i++)
-      {
-        var prop = props[i];
-        var dbColumnAttr = prop.GetCustomAttribute<DbColumnAttribute>();
-        propertyMap.Add(dbColumnAttr?.Alias ?? prop.Name, prop);
-      }
-
-      return propertyMap;
     }
   }
 }
