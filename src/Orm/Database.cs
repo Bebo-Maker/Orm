@@ -1,4 +1,5 @@
 ﻿using Orm.Attributes;
+using Orm.ObjectCreator;
 using Orm.Reflection;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace Orm
   public class Database
   {
     private readonly string _connectionString;
+    private static readonly IObjectCreator _objectCreator = new ActivatorObjectCreator();
 
     private Database(string connectionString)
     {
@@ -94,7 +96,7 @@ namespace Orm
           throw new ArgumentException($"No matching parameter for field {fieldName}");
       }
 
-      return ((T)Activator.CreateInstance(type, dbData));
+      return _objectCreator.Create<T>(type, dbData);
     }
 
     private static List<T> HandlePropertyInjection<T>(SqlDataReader reader, Type type)
@@ -121,7 +123,7 @@ namespace Orm
 
     private static T CreateEntity<T>(SqlDataReader reader, Type type, Dictionary<string, FastPropertyInfo> propertyMap)
     {
-      T entity = (T)Activator.CreateInstance(type);
+      T entity = _objectCreator.Create<T>(type);
       for (int i = 0; i < reader.FieldCount; i++)
       {
         string fieldName = reader.GetName(i);
