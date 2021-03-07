@@ -6,11 +6,11 @@
     { 
       _sb.Append("SELECT ");
 
-      var columns = Table.ColumnNames;
+      var columns = Table.Columns;
       for (int i = 0; i < columns.Length - 1; i++)
-        _sb.Append(columns[i]).Append(", ");
+        _sb.Append(columns[i].Alias).Append(", ");
 
-      _sb.Append(columns[^1]);
+      _sb.Append(columns[^1].Alias);
 
       AppendFrom();
     }

@@ -3,6 +3,7 @@ using Orm.Expressions;
 using Orm.Factories;
 using Orm.Utils;
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
@@ -12,8 +13,8 @@ namespace Orm.Querying.Builders
   public class QueryBuilder<T> : IQueryBuilder<T>
   {
     private readonly ISqlTranslator _translator;
-    protected readonly StringBuilder _sb = new StringBuilder();
-    private readonly SqlExpressionVisitor _visitor = new SqlExpressionVisitor();
+    protected readonly StringBuilder _sb = new();
+    private readonly SqlExpressionVisitor _visitor = new();
     protected readonly Table Table;
 
     public QueryBuilder(ISqlTranslator translator)
@@ -58,10 +59,10 @@ namespace Orm.Querying.Builders
       return this;
     }
 
-    private static string GetColumnNameFromExpression<TProperty>(Expression<Func<T, TProperty>> expression)
+    private string GetColumnNameFromExpression<TProperty>(Expression<Func<T, TProperty>> expression)
     {
-      var prop = GetPropertyFromExpression(expression);
-      return AliasUtils.GetColumnName(prop);
+      var propName = GetPropertyFromExpression(expression).Name;
+      return Table.Columns.FirstOrDefault(c => c.Name == propName).Alias;
     }
 
     private static PropertyInfo GetPropertyFromExpression<TProperty>(Expression<Func<T, TProperty>> expression)
