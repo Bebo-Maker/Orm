@@ -2,8 +2,7 @@
 A simple ORM, just for fun.
 
 # Usage
-
-#### Entity
+### Entity
 ```csharp
 [Table("PersonTable")]
 public class Person
@@ -13,34 +12,42 @@ public class Person
   public string Address { get; set; }
 }
 ```
-#### Query
+### Running queries
+Querying are provided by using Extensions for the [IDbConnection](https://docs.microsoft.com/en-us/dotnet/api/system.data.idbconnection?view=net-5.0 Interface.
+For example:
 ```csharp
-var db = new Database("YourConnectionString");
-var results = db.Query<Person>();
+using(var conn = new SqlConnection("YourConnectionString")
+{
+	conn.Open();
+	// Run your queries here.
+}
 ```
-#### QueryAsync
+### Query
 ```csharp
-var db = new Database("YourConnectionString");
-var results = await db.QueryAsync<Person>();
+var results = conn.Query<Person>();
 ```
-#### Filtering
+### QueryAsync
+```csharp
+var results = await conn.QueryAsync<Person>();
+```
+### Filtering
 Use expressions to add additional conditions (WHERE, ORDER BY, ...)
 ```csharp
-var results = _db.Query<Person>(b => b.Where(p => p.Id > 1 && p.Age == 10).OrderBy(a => a.Id));
+var results = conn.Query<Person>(b => b.Where(p => p.Id > 1 && p.Age == 10).OrderBy(a => a.Id));
 ```
 which will result in the following SQL Statement under the hood:
 ```sql
 SELECT Name, Age, Address FROM PersonTable WHERE Id > 1 AND Age = 10 ORDER BY Id ASC
 ```
 
-#### Raw SQL
+### Raw SQL
 You dont wanna use expressions or execute a complex query?
 Just use query with a raw SQL statement.
 ```csharp
-var results = _db.Query<Person>("SELECT Name, Age, Address FROM PersonTable WHERE Id > 1");
+var results = conn.Query<Person>("SELECT Name, Age, Address FROM PersonTable WHERE Id > 1");
 ```
 
-#### Immutability
+### Immutability
 Immutable classes are also supported.
 ```csharp
 [Table("PersonTable")]
@@ -59,6 +66,5 @@ public class Person
   }
 }
 
-var db = new Database("YourConnectionString");
-var results = db.Query<Person>();
+var results = conn.Query<Person>();
 ```
