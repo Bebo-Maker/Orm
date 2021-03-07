@@ -34,7 +34,7 @@ SELECT Name, Age, Address FROM PersonTable WHERE Id > 1 AND Age = 10 ORDER BY Id
 ```
 
 #### Raw SQL
-You dont wanna use expressions or have a complex query?
+You dont wanna use expressions or execute a complex query?
 Just use query with a raw SQL statement.
 ```csharp
 var results = _db.Query<Person>("SELECT Name, Age, Address FROM PersonTable WHERE Id > 1");
