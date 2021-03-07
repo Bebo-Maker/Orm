@@ -1,7 +1,6 @@
 ﻿using Orm.Entities;
 using Orm.Expressions;
 using Orm.Factories;
-using Orm.Utils;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
@@ -12,14 +11,12 @@ namespace Orm.Querying.Builders
 {
   public class QueryBuilder<T> : IQueryBuilder<T>
   {
-    private readonly ISqlTranslator _translator;
     protected readonly StringBuilder _sb = new();
     private readonly SqlExpressionVisitor _visitor = new();
     protected readonly Table Table;
 
-    public QueryBuilder(ISqlTranslator translator)
-    {
-      _translator = translator;
+    public QueryBuilder() 
+    { 
       Table = TableFactory.GetOrCreateTableDefinition(typeof(T));
     }
 
@@ -27,7 +24,7 @@ namespace Orm.Querying.Builders
     {
       string condition = _visitor.Translate(predicate);
 
-      _sb.Append(' ').Append(_translator.Where(condition));
+      _sb.Append(" WHERE ").Append(condition);
 
       return this;
     }
@@ -36,7 +33,7 @@ namespace Orm.Querying.Builders
     {
       string columnName = GetColumnNameFromExpression(expression);
 
-      _sb.Append(' ').Append(_translator.OrderBy(columnName));
+      _sb.Append(" ORDER BY ").Append(columnName).Append(" ASC");
 
       return this;
     }
@@ -45,7 +42,7 @@ namespace Orm.Querying.Builders
     {
       string columnName = GetColumnNameFromExpression(expression);
 
-      _sb.Append(' ').Append(_translator.OrderByDescending(columnName));
+      _sb.Append("ORDER BY ").Append(columnName).Append(" DESC");
 
       return this;
     }

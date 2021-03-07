@@ -7,6 +7,6 @@ namespace Orm.Querying.Builders
   {
     protected override string Keyword { get; } = "SELECT DISTNCT";
 
-    public SelectDistinctQueryBuilder(ISqlTranslator translator, Expression<Func<T, object>>[] selectColumns = null) : base(translator, selectColumns) { }
+    public SelectDistinctQueryBuilder(Expression<Func<T, object>>[] selectColumns = null) : base(selectColumns) { }
   }
 }

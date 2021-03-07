@@ -9,7 +9,7 @@ namespace Orm.Querying.Builders
     protected virtual string Keyword { get; } = "SELECT";
 
 
-    public SelectQueryBuilder(ISqlTranslator translator, Expression<Func<T, object>>[] selectColumns = null) : base(translator)
+    public SelectQueryBuilder(Expression<Func<T, object>>[] selectColumns = null)
     {
       _sb.Append("SELECT DISTINCT ");
 

@@ -17,8 +17,7 @@ namespace Orm
   public static class IDbConnectionExtensions
   {
     private static readonly IObjectCreator _objectCreator = new ActivatorObjectCreator();
-    private static readonly ISqlTranslator _translator = new SqlTranslator();
-
+    
     public static List<T> Query<T>(this IDbConnection conn, Action<IQueryBuilder<T>> action = null)
     {
       string sql = CreateSelectBuilder(action);
@@ -63,14 +62,14 @@ namespace Orm
 
     private static string CreateSelectBuilder<T>(Action<IQueryBuilder<T>> action)
     {
-      var builder = new SelectQueryBuilder<T>(_translator);
+      var builder = new SelectQueryBuilder<T>();
       action?.Invoke(builder);
       return builder.Build();
     }
 
     private static string CreateSelectDistinctBuilder<T>(Action<IQueryBuilder<T>> action)
     {
-      var builder = new SelectDistinctQueryBuilder<T>(_translator);
+      var builder = new SelectDistinctQueryBuilder<T>();
       action?.Invoke(builder);
       return builder.Build();
     }
