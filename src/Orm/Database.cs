@@ -149,7 +149,7 @@ namespace Orm
       for (int i = 0; i < reader.FieldCount; i++)
       {
         string fieldName = reader.GetName(i);
-        table.Columns[fieldName]?.SetValue(entity, reader[i]);
+        table.SetValueOfColumn(fieldName, entity, reader[i]);
       }
 
       return entity;
