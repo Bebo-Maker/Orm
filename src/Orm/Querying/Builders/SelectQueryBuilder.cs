@@ -1,16 +1,26 @@
-﻿namespace Orm.Querying.Builders
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
+
+namespace Orm.Querying.Builders
 {
   public class SelectQueryBuilder<T> : QueryBuilder<T>
   {
-    public SelectQueryBuilder(ISqlTranslator translator) : base(translator)
-    { 
-      _sb.Append("SELECT ");
+    protected virtual string Keyword { get; } = "SELECT";
 
-      var columns = Table.Columns;
+
+    public SelectQueryBuilder(ISqlTranslator translator, Expression<Func<T, object>>[] selectColumns = null) : base(translator)
+    {
+      _sb.Append("SELECT DISTINCT ");
+
+      var columns = selectColumns?.Select(e => GetColumnNameFromExpression(e)).ToArray();
+      if (selectColumns == null)
+        columns = Table.Columns.Select(a => a.Alias).ToArray();
+
       for (int i = 0; i < columns.Length - 1; i++)
-        _sb.Append(columns[i].Alias).Append(", ");
+        _sb.Append(columns[i]).Append(", ");
 
-      _sb.Append(columns[^1].Alias);
+      _sb.Append(columns[^1]);
 
       AppendFrom();
     }

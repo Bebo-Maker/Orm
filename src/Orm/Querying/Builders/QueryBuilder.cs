@@ -59,13 +59,13 @@ namespace Orm.Querying.Builders
       return this;
     }
 
-    private string GetColumnNameFromExpression<TProperty>(Expression<Func<T, TProperty>> expression)
+    protected string GetColumnNameFromExpression<TProperty>(Expression<Func<T, TProperty>> expression)
     {
       var propName = GetPropertyFromExpression(expression).Name;
       return Table.Columns.FirstOrDefault(c => c.Name == propName).Alias;
     }
 
-    private static PropertyInfo GetPropertyFromExpression<TProperty>(Expression<Func<T, TProperty>> expression)
+    protected static PropertyInfo GetPropertyFromExpression<TProperty>(Expression<Func<T, TProperty>> expression)
     {
       return (expression.Body as MemberExpression)?.Member is PropertyInfo prop
           ? prop
