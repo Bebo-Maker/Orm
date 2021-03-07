@@ -1,5 +1,7 @@
 using NUnit.Framework;
 using Orm.Entities;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,18 +12,19 @@ namespace Orm.Tests
     private const string Table = "TestTable";
     private const string BigDataTable = "TestTableBigData";
 
-    private Database _db;
+    private IDbConnection _connection;
 
     [SetUp]
     public void Setup()
     {
-      _db = new Database(@"Server=localhost\SQLEXPRESS;Database=TestDB;Trusted_Connection=True;");
+      _connection = new SqlConnection(@"Server=localhost\SQLEXPRESS;Database=TestDB;Trusted_Connection=True;");
+      _connection.Open();
     }
 
     [Test]
     public void PropertyInjectionTest()
     {
-      var results = _db.Query<TestData>($"SELECT * FROM {Table}").ToList();
+      var results = _connection.Query<TestData>($"SELECT * FROM {Table}").ToList();
 
       Assert.IsTrue(results.Count > 0);
     }
@@ -29,7 +32,7 @@ namespace Orm.Tests
     [Test]
     public async Task PropertyInjectionAsyncTest()
     {
-      var results = await _db.QueryAsync<TestData>($"SELECT * FROM {Table}");
+      var results = await _connection.QueryAsync<TestData>($"SELECT * FROM {Table}");
 
       Assert.IsTrue(results.Count > 0);
     }
@@ -37,7 +40,7 @@ namespace Orm.Tests
     [Test]
     public void ConstructorInjectionTest()
     {
-      var results = _db.Query<ConstructorTestData>($"SELECT * FROM {Table}").ToList();
+      var results = _connection.Query<ConstructorTestData>($"SELECT * FROM {Table}").ToList();
 
       Assert.IsTrue(results.Count > 0);
     }
@@ -45,7 +48,7 @@ namespace Orm.Tests
     [Test]
     public async Task ConstructorInjectionAsyncTest()
     {
-      var results = await _db.QueryAsync<ConstructorTestData>($"SELECT * FROM {Table}");
+      var results = await _connection.QueryAsync<ConstructorTestData>($"SELECT * FROM {Table}");
 
       Assert.IsTrue(results.Count > 0);
     }
@@ -53,7 +56,7 @@ namespace Orm.Tests
     [Test]
     public void PropertyInjectionBigDataTest()
     {
-      var results = _db.Query<TestData>($"SELECT * FROM {BigDataTable}").ToList();
+      var results = _connection.Query<TestData>($"SELECT * FROM {BigDataTable}").ToList();
 
       Assert.IsTrue(results.Count > 0);
     }
@@ -61,7 +64,7 @@ namespace Orm.Tests
     [Test]
     public async Task PropertyInjectionAsyncBigDataTest()
     {
-      var results = await _db.QueryAsync<TestData>($"SELECT * FROM {BigDataTable}");
+      var results = await _connection.QueryAsync<TestData>($"SELECT * FROM {BigDataTable}");
 
       Assert.IsTrue(results.Count > 0);
     }
@@ -69,7 +72,7 @@ namespace Orm.Tests
     [Test]
     public void ConstructorInjectionBigDataTest()
     {
-      var results = _db.Query<ConstructorTestData>($"SELECT * FROM {BigDataTable}").ToList();
+      var results = _connection.Query<ConstructorTestData>($"SELECT * FROM {BigDataTable}").ToList();
 
       Assert.IsTrue(results.Count > 0);
     }
@@ -77,9 +80,12 @@ namespace Orm.Tests
     [Test]
     public async Task ConstructorInjectionAsyncBigDataTest()
     {
-      var results = await _db.QueryAsync<ConstructorTestData>($"SELECT * FROM {BigDataTable}");
+      var results = await _connection.QueryAsync<ConstructorTestData>($"SELECT * FROM {BigDataTable}");
 
       Assert.IsTrue(results.Count > 0);
     }
+
+    [TearDown]
+    public void TearDown() => _connection.Dispose();
   }
 }
