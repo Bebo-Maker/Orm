@@ -1,5 +1,4 @@
-﻿using Orm.Reflection;
-using System.Collections.Generic;
+﻿using System.Linq;
 
 namespace Orm.Entities
 {
@@ -7,15 +6,14 @@ namespace Orm.Entities
   {
     public string Name { get; }
 
-    public string[] ColumnNames { get; }
+    public Column[] Columns { get; }
 
-    public Dictionary<string, FastPropertyInfo> Columns { get; }
-
-    public Table(string name, string[] columnNames, Dictionary<string, FastPropertyInfo> columns)
+    public Table(string name, Column[] columns)
     {
       Name = name;
-      ColumnNames = columnNames;
       Columns = columns;
     }
+
+    public void SetValueOfColumn(string name, object instance, object value) => Columns.FirstOrDefault(c => c.Name == name)?.SetValue(instance, value);
   }
 }
