@@ -24,8 +24,6 @@ namespace Orm
       _connectionString = connectionString;
     }
 
-    public IQueryBuilder<T> CreateQuery<T>() => new SelectQueryBuilder<T>(_translator);
-
     public List<T> Query<T>(Action<IQueryBuilder<T>> action)
     {
       var builder = new SelectQueryBuilder<T>(_translator);
@@ -44,6 +42,17 @@ namespace Orm
       using var cmd = new SqlCommand(sqlStatement, connection);
       var reader = cmd.ExecuteReader();
       return CreateObjects<T>(reader);
+    }
+
+    public Task<List<T>> QueryAsync<T>(Action<IQueryBuilder<T>> action)
+    {
+      var builder = new SelectQueryBuilder<T>(_translator);
+
+      action(builder);
+
+      string sql = builder.Build();
+
+      return QueryAsync<T>(sql);
     }
 
     public async Task<List<T>> QueryAsync<T>(string sqlStatement)
