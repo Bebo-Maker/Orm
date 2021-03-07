@@ -13,7 +13,7 @@ public class Person
 }
 ```
 ### Running queries
-Querying are provided by using Extensions for the [IDbConnection](https://docs.microsoft.com/en-us/dotnet/api/system.data.idbconnection?view=net-5.0 Interface.
+Querying are provided by using Extensions for the [IDbConnection](https://docs.microsoft.com/en-us/dotnet/api/system.data.idbconnection?view=net-5.0) Interface.
 For example:
 ```csharp
 using(var conn = new SqlConnection("YourConnectionString")
