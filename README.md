@@ -30,7 +30,7 @@ public class Person
   public int Age { get; }
   public string Address { get; }
   
-  [Constructor]
+  [DatabaseConstructor]
   public Person(string name, int age, string address)
   {
     Name = name;
