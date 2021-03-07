@@ -24,13 +24,9 @@ namespace Orm
       _connectionString = connectionString;
     }
 
-    public List<T> Query<T>(Action<IQueryBuilder<T>> action)
+    public List<T> Query<T>(Action<IQueryBuilder<T>> action = null)
     {
-      var builder = new SelectQueryBuilder<T>(_translator);
-
-      action(builder);
-
-      string sql = builder.Build();
+      string sql = CreateSelectBuilder(action);
 
       return Query<T>(sql);
     }
@@ -44,13 +40,9 @@ namespace Orm
       return CreateObjects<T>(reader);
     }
 
-    public Task<List<T>> QueryAsync<T>(Action<IQueryBuilder<T>> action)
+    public Task<List<T>> QueryAsync<T>(Action<IQueryBuilder<T>> action = null)
     {
-      var builder = new SelectQueryBuilder<T>(_translator);
-
-      action(builder);
-
-      string sql = builder.Build();
+      string sql = CreateSelectBuilder(action);
 
       return QueryAsync<T>(sql);
     }
@@ -62,6 +54,13 @@ namespace Orm
       var cmd = new SqlCommand(sqlStatement, connection);
       var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false);
       return await CreateObjectsAsync<T>(reader);
+    }
+
+    private static string CreateSelectBuilder<T>(Action<IQueryBuilder<T>> action)
+    {
+      var builder = new SelectQueryBuilder<T>(_translator);
+      action?.Invoke(builder);
+      return builder.Build();
     }
 
     private static List<T> CreateObjects<T>(SqlDataReader reader)
