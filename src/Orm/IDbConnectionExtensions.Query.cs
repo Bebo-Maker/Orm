@@ -11,13 +11,13 @@ namespace Orm
   {
     public static List<T> Query<T>(this IDbConnection conn, Action<IQueryBuilder<T>> action = null)
     {
-      string sql = BuilderFactory.CreateSelectBuilder<T>(action);
+      string sql = BuilderFactory.CreateSelectBuilder(action);
       return Query<T>(conn, sql);
     }
 
     public static List<T> QueryDistinct<T>(this IDbConnection conn, Action<IQueryBuilder<T>> action = null)
     {
-      string sql = BuilderFactory.CreateSelectDistinctBuilder<T>(action);
+      string sql = BuilderFactory.CreateSelectDistinctBuilder(action);
       return Query<T>(conn, sql);
     }
 
@@ -30,13 +30,13 @@ namespace Orm
 
     public static Task<List<T>> QueryAsync<T>(this IDbConnection conn, Action<IQueryBuilder<T>> action = null)
     {
-      string sql = BuilderFactory.CreateSelectBuilder<T>(action);
+      string sql = BuilderFactory.CreateSelectBuilder(action);
       return QueryAsync<T>(conn, sql);
     }
 
     public static Task<List<T>> QueryDistinctAsync<T>(this IDbConnection conn, Action<IQueryBuilder<T>> action = null)
     {
-      string sql = BuilderFactory.CreateSelectDistinctBuilder<T>(action);
+      string sql = BuilderFactory.CreateSelectDistinctBuilder(action);
       return QueryAsync<T>(conn, sql);
     }
 
