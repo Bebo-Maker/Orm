@@ -21,8 +21,8 @@ namespace Orm.Expressions
       [ExpressionType.LessThanOrEqual] = "<="
     };
 
-    private readonly StringBuilder _sb = new StringBuilder();
-    private readonly Stack<string> _fieldNames = new Stack<string>();
+    private readonly StringBuilder _sb = new();
+    private readonly Stack<string> _fieldNames = new();
 
     public string Translate(LambdaExpression expression)
     {
@@ -37,21 +37,17 @@ namespace Orm.Expressions
 
       _sb.Append(_expressionTypeToSqlOperands[ExpressionType.Not]);
 
-      AppendOpeningBracket();
       Visit(node.Operand);
-      AppendClosingBracket();
 
       return node;
     }
 
     protected override Expression VisitBinary(BinaryExpression node)
     {
-      AppendOpeningBracket();
       Visit(node.Left);
       _sb.Append(_expressionTypeToSqlOperands[node.NodeType]);
       Visit(node.Right);
-      AppendClosingBracket();
-
+      
       return node;
     }
 
@@ -73,10 +69,6 @@ namespace Orm.Expressions
       _sb.Append(GetValue(node.Value));
       return node;
     }
-
-
-    private void AppendOpeningBracket() => _sb.Append('(');
-    private void AppendClosingBracket() => _sb.Append(')');
 
     private string GetValue(object input)
     {

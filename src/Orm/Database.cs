@@ -15,9 +15,10 @@ namespace Orm
 {
   public class Database
   {
-    private readonly string _connectionString;
     private static readonly IObjectCreator _objectCreator = new ActivatorObjectCreator();
     private static readonly ISqlTranslator _translator = new SqlTranslator();
+
+    private readonly string _connectionString;
 
     public Database(string connectionString)
     {
