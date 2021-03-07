@@ -1,32 +1,32 @@
-﻿using Orm.Attributes;
-using Orm.Entities;
+﻿using Orm.Entities;
 using Orm.Reflection;
+using Orm.Utils;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace Orm.Factories
 {
   public class TableFactory
   {
-    private static readonly ConcurrentDictionary<Type, TableDefinition> _tableCache = new ConcurrentDictionary<Type, TableDefinition>();
+    private static readonly ConcurrentDictionary<Type, Table> _tableCache = new ConcurrentDictionary<Type, Table>();
 
-    public static TableDefinition GetOrCreateTableDefinition(Type type)
+    public static Table GetOrCreateTableDefinition(Type type)
     {
       if (_tableCache.TryGetValue(type, out var table))
         return table;
 
       var cols = new Dictionary<string, FastPropertyInfo>();
+      var colNames = new List<string>();
 
       foreach(var prop in type.GetProperties())
       {
-        var columnAttr = prop.GetCustomAttribute<ColumnAttribute>();
-        cols.Add(columnAttr?.Alias ?? prop.Name, new FastPropertyInfo(prop));
+        string columnName = AliasUtils.GetColumnName(prop);
+        colNames.Add(columnName);
+        cols.Add(columnName, new FastPropertyInfo(prop));
       }
-
-      var tableAttr = type.GetCustomAttribute<TableAttribute>();
-      table = new TableDefinition(tableAttr?.Alias ?? type.Name, cols);
+      
+      table = new Table(AliasUtils.GetTableName(type), colNames.ToArray(), cols);
 
       _tableCache.TryAdd(type, table);
       return table;
