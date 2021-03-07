@@ -2,8 +2,6 @@
 using Orm.Entities;
 using Orm.Factories;
 using Orm.ObjectCreator;
-using Orm.Querying;
-using Orm.Querying.Builders;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,67 +12,11 @@ using System.Threading.Tasks;
 
 namespace Orm
 {
-  public static class IDbConnectionExtensions
+  internal static class Engine
   {
     private static readonly IObjectCreator _objectCreator = new ActivatorObjectCreator();
-    
-    public static List<T> Query<T>(this IDbConnection conn, Action<IQueryBuilder<T>> action = null)
-    {
-      string sql = CreateSelectBuilder(action);
 
-      return Query<T>(conn, sql);
-    }
-
-    public static List<T> QueryDistinct<T>(this IDbConnection conn, Action<IQueryBuilder<T>> action = null)
-    {
-      string sql = CreateSelectDistinctBuilder(action);
-
-      return Query<T>(conn, sql);
-    }
-
-    public static List<T> Query<T>(this IDbConnection conn, string sqlStatement)
-    {
-      using var cmd = DbFactory.CreateCommand(conn, sqlStatement);
-      var reader = cmd.ExecuteReader();
-      return CreateObjects<T>(reader);
-    }
-
-    public static Task<List<T>> QueryAsync<T>(this IDbConnection conn, Action<IQueryBuilder<T>> action = null)
-    {
-      string sql = CreateSelectBuilder(action);
-
-      return QueryAsync<T>(conn, sql);
-    }
-
-    public static Task<List<T>> QueryDistinctAsync<T>(this IDbConnection conn, Action<IQueryBuilder<T>> action = null)
-    {
-      string sql = CreateSelectDistinctBuilder(action);
-
-      return QueryAsync<T>(conn, sql);
-    }
-
-    public static async Task<List<T>> QueryAsync<T>(this IDbConnection conn, string sqlStatement)
-    {
-      var cmd = DbFactory.TryCreateAsyncComand(conn, sqlStatement);
-      var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false);
-      return await CreateObjectsAsync<T>(reader);
-    }
-
-    private static string CreateSelectBuilder<T>(Action<IQueryBuilder<T>> action)
-    {
-      var builder = new SelectQueryBuilder<T>();
-      action?.Invoke(builder);
-      return builder.Build();
-    }
-
-    private static string CreateSelectDistinctBuilder<T>(Action<IQueryBuilder<T>> action)
-    {
-      var builder = new SelectDistinctQueryBuilder<T>();
-      action?.Invoke(builder);
-      return builder.Build();
-    }
-
-    private static List<T> CreateObjects<T>(IDataReader reader)
+    public static List<T> CreateObjects<T>(IDataReader reader)
     {
       var type = typeof(T);
       var ctor = GetConstructorWithDbConstructorAttribute(type);
@@ -84,7 +26,7 @@ namespace Orm
           : HandlePropertyInjection<T>(reader, type);
     }
 
-    private static Task<List<T>> CreateObjectsAsync<T>(DbDataReader reader)
+    public static Task<List<T>> CreateObjectsAsync<T>(DbDataReader reader)
     {
       var type = typeof(T);
       var ctor = GetConstructorWithDbConstructorAttribute(type);
@@ -94,7 +36,8 @@ namespace Orm
           : HandlePropertyInjectionAsync<T>(reader, type);
     }
 
-    private static ConstructorInfo GetConstructorWithDbConstructorAttribute(Type type) => type.GetConstructors().FirstOrDefault(c => c.CustomAttributes.FirstOrDefault(a => a.AttributeType == typeof(DatabaseConstructorAttribute)) != null);
+    private static ConstructorInfo GetConstructorWithDbConstructorAttribute(Type type) => type.GetConstructors()
+                                                                                              .FirstOrDefault(c => c.CustomAttributes.FirstOrDefault(a => a.AttributeType == typeof(DatabaseConstructorAttribute)) != null);
 
     private static List<T> HandleConstructorInjection<T>(IDataReader reader, Type type, string[] parameters)
     {
