@@ -3,6 +3,7 @@ using System;
 
 namespace Orm.Entities
 {
+  [Table("TestTable")]
   public class ConstructorTestData
   {
     public int Id { get; }

@@ -2,7 +2,8 @@
 using Orm.Entities;
 using Orm.Factories;
 using Orm.ObjectCreator;
-using Orm.Reflection;
+using Orm.Querying;
+using Orm.Querying.Builders;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -16,10 +17,24 @@ namespace Orm
   {
     private readonly string _connectionString;
     private static readonly IObjectCreator _objectCreator = new ActivatorObjectCreator();
+    private static readonly ISqlTranslator _translator = new SqlTranslator();
 
     public Database(string connectionString)
     {
       _connectionString = connectionString;
+    }
+
+    public IQueryBuilder<T> CreateQuery<T>() => new SelectQueryBuilder<T>(_translator);
+
+    public List<T> Query<T>(Action<IQueryBuilder<T>> action)
+    {
+      var builder = new SelectQueryBuilder<T>(_translator);
+
+      action(builder);
+
+      string sql = builder.Build();
+
+      return Query<T>(sql);
     }
 
     public List<T> Query<T>(string sqlStatement)
@@ -120,7 +135,7 @@ namespace Orm
       return entities;
     }
 
-    private static T CreateEntity<T>(SqlDataReader reader, Type type, TableDefinition table)
+    private static T CreateEntity<T>(SqlDataReader reader, Type type, Table table)
     {
       T entity = _objectCreator.Create<T>(type);
       for (int i = 0; i < reader.FieldCount; i++)

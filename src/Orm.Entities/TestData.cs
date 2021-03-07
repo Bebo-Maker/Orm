@@ -3,6 +3,7 @@ using System;
 
 namespace Orm.Entities
 {
+  [Table("TestTable")]
   public class TestData
   {
     public int Id { get; set; }
