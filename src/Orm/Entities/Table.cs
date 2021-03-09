@@ -14,6 +14,6 @@ namespace Orm.Entities
       Columns = columns;
     }
 
-    public void SetValueOfColumn(string name, object instance, object value) => Columns.FirstOrDefault(c => c.Name == name)?.SetValue(instance, value);
+    public void SetValueOfColumn(string name, object instance, object value) => Columns.FirstOrDefault(c => c.Alias == name)?.SetValue(instance, value);
   }
 }
