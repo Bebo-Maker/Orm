@@ -17,12 +17,12 @@ namespace Orm.Factories
       if (_tableCache.TryGetValue(type, out var table))
         return table;
 
-      var props = PropertyCache<T>.Properties;
+      var props = typeof(T).GetProperties();
       var columns = new Column[props.Length];
       for (int i = 0; i < props.Length; i++)
       {
         var prop = props[i];
-        columns[i] = new Column(prop.Name, AliasUtils.GetColumnName(prop), _delegateCreator.CreatePropertySetter(prop));
+        columns[i] = new Column(prop.Name, AliasUtils.GetColumnName(prop), _delegateCreator.CreatePropertyGetter(prop), _delegateCreator.CreatePropertySetter(prop));
       }
 
       table = new Table(AliasUtils.GetTableName(type), columns);
