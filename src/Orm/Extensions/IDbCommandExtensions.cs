@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 
 namespace Orm.Extensions
 {
@@ -8,7 +9,7 @@ namespace Orm.Extensions
     {
       var parameter = command.CreateParameter();
       parameter.ParameterName = name;
-      parameter.Value = value;
+      parameter.Value = value is null ? DBNull.Value : value;
       command.Parameters.Add(parameter);
     }
   }
