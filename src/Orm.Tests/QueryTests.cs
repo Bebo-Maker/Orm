@@ -1,7 +1,5 @@
 ﻿using NUnit.Framework;
 using Orm.Entities;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 
 namespace Orm.Tests

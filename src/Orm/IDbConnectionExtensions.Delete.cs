@@ -11,14 +11,14 @@ namespace Orm
     public static int Delete<T>(this IDbConnection conn, Action<IQueryBuilder<T>> action)
     {
       string sql = BuilderFactory.CreateDeleteBuilder(action);
-      var cmd = DbFactory.CreateCommand(conn, sql);
+      using var cmd = DbFactory.CreateCommand(conn, sql);
       return cmd.ExecuteNonQuery();
     }
 
     public static Task<int> DeleteAsync<T>(this IDbConnection conn, Action<IQueryBuilder<T>> action)
     {
       string sql = BuilderFactory.CreateDeleteBuilder(action);
-      var cmd = DbFactory.TryCreateAsyncComand(conn, sql);
+      using var cmd = DbFactory.TryCreateAsyncComand(conn, sql);
       return cmd.ExecuteNonQueryAsync();
     }
   }

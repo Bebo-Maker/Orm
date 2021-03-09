@@ -24,7 +24,7 @@ namespace Orm
     public static List<T> Query<T>(this IDbConnection conn, string sqlStatement)
     {
       using var cmd = DbFactory.CreateCommand(conn, sqlStatement);
-      var reader = cmd.ExecuteReader();
+      using var reader = cmd.ExecuteReader();
       return Engine.CreateObjects<T>(reader);
     }
 
@@ -42,8 +42,8 @@ namespace Orm
 
     public static async Task<List<T>> QueryAsync<T>(this IDbConnection conn, string sqlStatement)
     {
-      var cmd = DbFactory.TryCreateAsyncComand(conn, sqlStatement);
-      var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false);
+      using var cmd = DbFactory.TryCreateAsyncComand(conn, sqlStatement);
+      using var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false);
       return await Engine.CreateObjectsAsync<T>(reader);
     }
   }
