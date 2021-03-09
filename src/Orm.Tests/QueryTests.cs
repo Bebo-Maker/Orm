@@ -6,21 +6,12 @@ using System.Linq;
 
 namespace Orm.Tests
 {
-  public class QueryTests
+  public class QueryTests : DbTest
   {
-    private IDbConnection _connection;
-
-    [SetUp]
-    public void Setup()
-    {
-      _connection = new SqlConnection(@"Server=localhost\SQLEXPRESS;Database=TestDB;Trusted_Connection=True;");
-      _connection.Open();
-    }
-
     [Test]
     public void QueryTest()
     {
-      var results = _connection.Query<TestData>(b => b.Where(t => t.Id > 1).OrderBy(a => a.Id));
+      var results = Connection.Query<TestData>(b => b.Where(t => t.Id > 1).OrderBy(a => a.Id));
 
       Assert.IsFalse(results.Any(a => a.Id < 2));
     }
@@ -28,12 +19,12 @@ namespace Orm.Tests
     [Test]
     public void QueryDistinctTest()
     {
-      var results = _connection.QueryDistinct<TestData>();
+      var results = Connection.QueryDistinct<TestData>();
 
       Assert.IsTrue(results.Count > 0);
     }
 
     [TearDown]
-    public void TearDown() => _connection.Dispose();
+    public void TearDown() => Connection.Dispose();
   }
 }
