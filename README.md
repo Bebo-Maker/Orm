@@ -51,14 +51,14 @@ var results = conn.Query<Person>("SELECT Name, Age, Address FROM PersonTable WHE
 ### Insert
 ```csharp
 var person = new Person { Name = "Alex", Age = 32, Address = "Address" };
-var affected = conn.Insert(person);
+int rowsAffected = conn.Insert(person);
 ```
 
 ### Update
 ```csharp
 var person = conn.Query<Person>(q => q.Where(p => p.Id == 4)).FirstOrDefault();
 person.Age = 44;
-var affected = conn.Update(person, q => q.Where(p => p.Id == 4));
+int rowsAffected = conn.Update(person, q => q.Where(p => p.Id == 4));
 ```
 
 ### Immutability
