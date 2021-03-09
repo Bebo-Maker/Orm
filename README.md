@@ -7,6 +7,7 @@ A simple ORM, just for fun.
 [Table("PersonTable")]
 public class Person
 {
+  public int Id { get; set; }
   public string Name { get; set; }
   public int Age { get; set; }
   public string Address { get; set; }
@@ -47,19 +48,34 @@ Just use query with a raw SQL statement.
 var results = conn.Query<Person>("SELECT Name, Age, Address FROM PersonTable WHERE Id > 1");
 ```
 
+### Insert
+```csharp
+var person = new Person { Name = "Alex", Age = 32, Address = "Address" };
+var affected = conn.Insert(person);
+```
+
+### Update
+```csharp
+var person = conn.Query<Person>(q => q.Where(p => p.Id == 4)).FirstOrDefault();
+person.Age = 44;
+var affected = conn.Update(person, q => q.Where(p => p.Id == 4));
+```
+
 ### Immutability
 Immutable classes are also supported.
 ```csharp
 [Table("PersonTable")]
 public class Person
 {
+  public int Id { get; set; }
   public string Name { get; }
   public int Age { get; }
   public string Address { get; }
   
   [DatabaseConstructor]
-  public Person(string name, int age, string address)
+  public Person(int id, string name, int age, string address)
   {
+    Id = id,
     Name = name;
     Age = age;
     Address = address;
