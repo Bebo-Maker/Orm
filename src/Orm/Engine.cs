@@ -78,7 +78,7 @@ namespace Orm
     private static List<T> HandlePropertyInjection<T>(IDataReader reader, Type type)
     {
       var entities = new List<T>();
-      var table = TableFactory.GetOrCreateTableDefinition(type);
+      var table = TableFactory.GetOrCreateTableDefinition<T>();
 
       while (reader.Read())
         entities.Add(CreateEntity<T>(reader, type, table));
@@ -89,7 +89,7 @@ namespace Orm
     private static async Task<List<T>> HandlePropertyInjectionAsync<T>(DbDataReader reader, Type type)
     {
       var entities = new List<T>();
-      var table = TableFactory.GetOrCreateTableDefinition(type);
+      var table = TableFactory.GetOrCreateTableDefinition<T>();
 
       while (await reader.ReadAsync().ConfigureAwait(false))
         entities.Add(CreateEntity<T>(reader, type, table));

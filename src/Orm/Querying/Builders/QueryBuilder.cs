@@ -17,7 +17,7 @@ namespace Orm.Querying.Builders
 
     public QueryBuilder() 
     { 
-      Table = TableFactory.GetOrCreateTableDefinition(typeof(T));
+      Table = TableFactory.GetOrCreateTableDefinition<T>();
     }
 
     public IQueryBuilder<T> Where(Expression<Func<T, bool>> predicate)
