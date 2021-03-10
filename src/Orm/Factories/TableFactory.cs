@@ -1,8 +1,11 @@
-﻿using Orm.Entities;
+﻿using Orm.Attributes;
+using Orm.Entities;
 using Orm.Reflection;
 using Orm.Utils;
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
+using System.Reflection;
 
 namespace Orm.Factories
 {
@@ -17,7 +20,7 @@ namespace Orm.Factories
       if (_tableCache.TryGetValue(type, out var table))
         return table;
 
-      var props = typeof(T).GetProperties();
+      var props = typeof(T).GetProperties().Where(p => p.GetCustomAttribute<IgnoreAttribute>() == null).ToArray();
       var columns = new Column[props.Length];
       for (int i = 0; i < props.Length; i++)
       {
