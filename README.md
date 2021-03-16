@@ -1,4 +1,4 @@
-# Orm
+# Otis
 A simple ORM, just for fun.
 
 # Usage
