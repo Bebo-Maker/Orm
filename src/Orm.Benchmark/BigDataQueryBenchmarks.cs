@@ -17,15 +17,15 @@ namespace Orm.Benchmarks
     }
 
     [Benchmark]
-    public List<TestData> QueryProperties() => _db.Select<TestData>(SelectAllFromTestTable);
+    public List<TestData> QueryProperties() => _db.ExecuteReader<TestData>(SelectAllFromTestTable);
 
     [Benchmark]
-    public List<ConstructorTestData> QueryConstructor() => _db.Select<ConstructorTestData>(SelectAllFromTestTable);
+    public List<ConstructorTestData> QueryConstructor() => _db.ExecuteReader<ConstructorTestData>(SelectAllFromTestTable);
 
     [Benchmark]
-    public async Task<List<TestData>> QueryPropertiesAsync() => await _db.SelectAsync<TestData>(SelectAllFromTestTable);
+    public async Task<List<TestData>> QueryPropertiesAsync() => await _db.ExecuteReaderAsync<TestData>(SelectAllFromTestTable);
 
     [Benchmark]
-    public async Task<List<ConstructorTestData>> QueryConstructorAsync() => await _db.SelectAsync<ConstructorTestData>(SelectAllFromTestTable);
+    public async Task<List<ConstructorTestData>> QueryConstructorAsync() => await _db.ExecuteReaderAsync<ConstructorTestData>(SelectAllFromTestTable);
   }
 }

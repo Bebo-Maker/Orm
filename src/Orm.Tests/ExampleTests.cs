@@ -13,7 +13,7 @@ namespace Orm.Tests
     [Test]
     public void PropertyInjectionTest()
     {
-      var results = Db.Select<TestData>($"SELECT * FROM {Table}").ToList();
+      var results = Db.ExecuteReader<TestData>($"SELECT * FROM {Table}").ToList();
 
       Assert.IsTrue(results.Count > 0);
     }
@@ -21,7 +21,7 @@ namespace Orm.Tests
     [Test]
     public async Task PropertyInjectionAsyncTest()
     {
-      var results = await Db.SelectAsync<TestData>($"SELECT * FROM {Table}");
+      var results = await Db.ExecuteReaderAsync<TestData>($"SELECT * FROM {Table}");
 
       Assert.IsTrue(results.Count > 0);
     }
@@ -29,7 +29,7 @@ namespace Orm.Tests
     [Test]
     public void ConstructorInjectionTest()
     {
-      var results = Db.Select<ConstructorTestData>($"SELECT * FROM {Table}").ToList();
+      var results = Db.ExecuteReader<ConstructorTestData>($"SELECT * FROM {Table}").ToList();
 
       Assert.IsTrue(results.Count > 0);
     }
@@ -37,7 +37,7 @@ namespace Orm.Tests
     [Test]
     public async Task ConstructorInjectionAsyncTest()
     {
-      var results = await Db.SelectAsync<ConstructorTestData>($"SELECT * FROM {Table}");
+      var results = await Db.ExecuteReaderAsync<ConstructorTestData>($"SELECT * FROM {Table}");
 
       Assert.IsTrue(results.Count > 0);
     }
@@ -45,7 +45,7 @@ namespace Orm.Tests
     [Test]
     public void PropertyInjectionBigDataTest()
     {
-      var results = Db.Select<TestData>($"SELECT * FROM {BigDataTable}").ToList();
+      var results = Db.ExecuteReader<TestData>($"SELECT * FROM {BigDataTable}").ToList();
 
       Assert.IsTrue(results.Count > 0);
     }
@@ -53,7 +53,7 @@ namespace Orm.Tests
     [Test]
     public async Task PropertyInjectionAsyncBigDataTest()
     {
-      var results = await Db.SelectAsync<TestData>($"SELECT * FROM {BigDataTable}");
+      var results = await Db.ExecuteReaderAsync<TestData>($"SELECT * FROM {BigDataTable}");
 
       Assert.IsTrue(results.Count > 0);
     }
@@ -61,7 +61,7 @@ namespace Orm.Tests
     [Test]
     public void ConstructorInjectionBigDataTest()
     {
-      var results = Db.Select<ConstructorTestData>($"SELECT * FROM {BigDataTable}").ToList();
+      var results = Db.ExecuteReader<ConstructorTestData>($"SELECT * FROM {BigDataTable}").ToList();
 
       Assert.IsTrue(results.Count > 0);
     }
@@ -69,7 +69,7 @@ namespace Orm.Tests
     [Test]
     public async Task ConstructorInjectionAsyncBigDataTest()
     {
-      var results = await Db.SelectAsync<ConstructorTestData>($"SELECT * FROM {BigDataTable}");
+      var results = await Db.ExecuteReaderAsync<ConstructorTestData>($"SELECT * FROM {BigDataTable}");
 
       Assert.IsTrue(results.Count > 0);
     }
