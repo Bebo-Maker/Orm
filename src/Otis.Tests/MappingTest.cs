@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using Otis.Configuration;
 using Otis.Entities;
-using System.Data.SqlClient;
 
 namespace Otis.Tests
 {

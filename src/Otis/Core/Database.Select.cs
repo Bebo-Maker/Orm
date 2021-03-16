@@ -1,12 +1,21 @@
-﻿using Otis.Querying;
+﻿using Otis.Extensions;
+using Otis.Querying;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Otis.Core
 {
   internal partial class Database
   {
+    public T SelectSingle<T>(Action<IQueryBuilder<T>> action = null) => Select(action, 1).FirstOrDefault();
+
+    public T SelectSingleById<T, TIdentifier>(TIdentifier identifier)
+    {
+      throw new NotImplementedException();
+    }
+
     public T SelectById<T, TIdentifier>(TIdentifier identifier)
     {
       throw new NotImplementedException();
@@ -17,19 +26,15 @@ namespace Otis.Core
       throw new NotImplementedException();
     }
 
-    public List<T> Select<T>(Action<IQueryBuilder<T>> action = null)
+    public List<T> Select<T>(Action<IQueryBuilder<T>> action = null, int top = 0)
     {
-      string sql = _builderFactory.CreateSelectBuilder(action);
+      string sql = _builderFactory.CreateSelectBuilder(action, top);
       return ExecuteReader<T>(sql);
     }
 
-    public Task<List<T>> SelectAsync<T>(Action<IQueryBuilder<T>> action = null)
-    {
-      string sql = _builderFactory.CreateSelectBuilder(action);
-      return ExecuteReaderAsync<T>(sql);
-    }
+    public Task<T> SelectSingleAsync<T>(Action<IQueryBuilder<T>> action = null) => SelectAsync(action, 1).FirstOrDefault();
 
-    public Task<T> SelectByIdAsync<T, TIdentifier>(TIdentifier identifier)
+    public Task<T> SelectSingleByIdAsync<T, TIdentifier>(TIdentifier identifier)
     {
       throw new NotImplementedException();
     }
@@ -39,15 +44,21 @@ namespace Otis.Core
       throw new NotImplementedException();
     }
 
-    public List<T> SelectDistinct<T>(Action<IQueryBuilder<T>> action = null)
+    public Task<List<T>> SelectAsync<T>(Action<IQueryBuilder<T>> action = null, int top = 0)
     {
-      string sql = _builderFactory.CreateSelectDistinctBuilder(action);
+      string sql = _builderFactory.CreateSelectBuilder(action, top);
+      return ExecuteReaderAsync<T>(sql);
+    }
+
+    public List<T> SelectDistinct<T>(Action<IQueryBuilder<T>> action = null, int top = 0)
+    {
+      string sql = _builderFactory.CreateSelectDistinctBuilder(action, top);
       return ExecuteReader<T>(sql);
     }
 
-    public Task<List<T>> SelectDistinctAsync<T>(Action<IQueryBuilder<T>> action = null)
+    public Task<List<T>> SelectDistinctAsync<T>(Action<IQueryBuilder<T>> action = null, int top = 0)
     {
-      string sql = _builderFactory.CreateSelectDistinctBuilder(action);
+      string sql = _builderFactory.CreateSelectDistinctBuilder(action, top);
       return ExecuteReaderAsync<T>(sql);
     }
   }

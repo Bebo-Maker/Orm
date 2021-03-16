@@ -10,16 +10,18 @@ namespace Otis
     List<T> ExecuteReader<T>(string sql);
     Task<List<T>> ExecuteReaderAsync<T>(string sql);
 
-    T SelectById<T, TIdentifier>(TIdentifier identifier);
+    T SelectSingle<T>(Action<IQueryBuilder<T>> action = null);
+    T SelectSingleById<T, TIdentifier>(TIdentifier identifier);
     List<T> SelectById<T, TIdentifier>(params TIdentifier[] identifier);
-    List<T> Select<T>(Action<IQueryBuilder<T>> action = null);
+    List<T> Select<T>(Action<IQueryBuilder<T>> action = null, int top = 0);
 
-    Task<T> SelectByIdAsync<T, TIdentifier>(TIdentifier identifier);
+    Task<T> SelectSingleAsync<T>(Action<IQueryBuilder<T>> action = null);
+    Task<T> SelectSingleByIdAsync<T, TIdentifier>(TIdentifier identifier);
     Task<List<T>> SelectByIdAsync<T, TIdentifier>(params TIdentifier[] identifier);
-    Task<List<T>> SelectAsync<T>(Action<IQueryBuilder<T>> action = null);
+    Task<List<T>> SelectAsync<T>(Action<IQueryBuilder<T>> action = null, int top = 0);
 
-    List<T> SelectDistinct<T>(Action<IQueryBuilder<T>> action = null);
-    Task<List<T>> SelectDistinctAsync<T>(Action<IQueryBuilder<T>> action = null);
+    List<T> SelectDistinct<T>(Action<IQueryBuilder<T>> action = null, int top = 0);
+    Task<List<T>> SelectDistinctAsync<T>(Action<IQueryBuilder<T>> action = null, int top = 0);
 
     int Insert<T>(T entity, Action<IQueryBuilder<T>> action = null);
     Task<int> InsertAsync<T>(T entity, Action<IQueryBuilder<T>> action = null);
