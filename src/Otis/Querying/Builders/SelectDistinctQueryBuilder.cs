@@ -6,8 +6,9 @@ namespace Otis.Querying.Builders
 {
   internal class SelectDistinctQueryBuilder<T> : SelectQueryBuilder<T>
   {
-    protected override string Keyword { get; } = "SELECT DISTNCT";
+    protected override string Keyword { get; } = "SELECT DISTINCT";
 
-    public SelectDistinctQueryBuilder(ITableFactory factory, Expression<Func<T, object>>[] selectColumns = null) : base(factory, selectColumns) { }
+    public SelectDistinctQueryBuilder(ITableFactory factory, int elementsToSelect = 0, Expression<Func<T, object>>[] selectColumns = null) 
+      : base(factory, elementsToSelect, selectColumns) { }
   }
 }

@@ -9,9 +9,14 @@ namespace Otis.Querying.Builders
   {
     protected virtual string Keyword { get; } = "SELECT";
 
-    public SelectQueryBuilder(ITableFactory factory, Expression<Func<T, object>>[] selectColumns = null) : base(factory)
+    public SelectQueryBuilder(ITableFactory factory, int elementsToSelect = 0, Expression<Func<T, object>>[] selectColumns = null) : base(factory)
     {
-      _sb.Append("SELECT DISTINCT ");
+      _sb.Append(Keyword).Append(' ');
+
+      if (elementsToSelect > 0)
+        _sb.Append("TOP ")
+          .Append(elementsToSelect)
+          .Append(' ');
 
       var columns = selectColumns?.Select(e => GetColumnNameFromExpression(e)).ToArray();
       if (selectColumns == null)
