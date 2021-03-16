@@ -2,9 +2,8 @@
 A micro ORM.
 
 # Usage
-### Entity
 There are two approaches for mapping your Entities.
-#### Attribute based approach
+### Attribute based approach
 ```csharp
 using Orm.Attributes;
 
@@ -25,7 +24,7 @@ public class Person
   public bool IsAlive { get; set; }
 }
 ```
-#### Configuration based approach
+### Configuration based approach
 ```csharp
 public class Person
 {
