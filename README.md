@@ -39,9 +39,9 @@ public class Person
 
 using Orm.Configuration;
 
-public class PersonMapping : EntityMap<Person> 
+public class PersonMap : EntityMap<Person> 
 {
-  public PersonMapping() 
+  public PersonMap() 
   {
     Alias("PersonTable") // Set an alias for the table
     
@@ -52,10 +52,11 @@ public class PersonMapping : EntityMap<Person>
   }
 }
 ```
-Pass your mappings in the database constructor
+Register the mappings with the `DatabaseBuilder`.
 ```csharp
-var maps = new EntityMap[] { new PersonMapping() };
-var db = new Database(new SqlConnection("YourConnectionString"), maps);
+var db = new DatabaseBuilder().WithConnection(() => new SqlConnection("YourConnectionString"))
+                              .WithMap(new PersonMap())
+                              .Build();
 ```
 
 ### Running queries
@@ -64,7 +65,8 @@ This database object will take care of opening and closing connections, running 
 It is intended to be shared across the application.
 For example:
 ```csharp
-var db = new Database(new SqlConnection("YourConnectionString"));
+var db = new DatabaseBuilder().WithConnection(() => new SqlConnection("YourConnectionString"))
+                              .Build();
 //Run your queries here.
 ```
 ### Select
