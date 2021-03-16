@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Orm.Factories;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 
 namespace Orm.Querying.Builders
 {
-  public class SelectQueryBuilder<T> : QueryBuilder<T>
+  internal class SelectQueryBuilder<T> : QueryBuilder<T>
   {
     protected virtual string Keyword { get; } = "SELECT";
 
-
-    public SelectQueryBuilder(Expression<Func<T, object>>[] selectColumns = null)
+    public SelectQueryBuilder(ITableFactory factory, Expression<Func<T, object>>[] selectColumns = null) : base(factory)
     {
       _sb.Append("SELECT DISTINCT ");
 

@@ -1,10 +1,11 @@
-﻿using Orm.Utils;
+﻿using Orm.Factories;
+using Orm.Utils;
 
 namespace Orm.Querying.Builders
 {
-  public class UpdateQueryBuilder<T> : QueryBuilder<T>
+  internal class UpdateQueryBuilder<T> : QueryBuilder<T>
   {
-    public UpdateQueryBuilder()
+    public UpdateQueryBuilder(ITableFactory factory) : base(factory)
     {
       _sb.Append("UPDATE ")
          .Append(Table.Name)

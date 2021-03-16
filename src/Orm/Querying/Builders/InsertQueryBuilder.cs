@@ -1,11 +1,12 @@
-﻿using Orm.Utils;
+﻿using Orm.Factories;
+using Orm.Utils;
 using System.Linq;
 
 namespace Orm.Querying.Builders
 {
-  public class InsertQueryBuilder<T> : QueryBuilder<T>
+  internal class InsertQueryBuilder<T> : QueryBuilder<T>
   {
-    public InsertQueryBuilder()
+    public InsertQueryBuilder(ITableFactory factory) : base(factory)
     {
       _sb.Append("INSERT INTO ")
          .Append(Table.Name)

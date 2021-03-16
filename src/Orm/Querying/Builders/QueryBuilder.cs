@@ -1,23 +1,23 @@
 ﻿using Orm.Entities;
 using Orm.Expressions;
 using Orm.Factories;
+using Orm.Utils;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Text;
 
 namespace Orm.Querying.Builders
 {
-  public class QueryBuilder<T> : IQueryBuilder<T>
+  internal class QueryBuilder<T> : IQueryBuilder<T>
   {
     protected readonly StringBuilder _sb = new();
     private readonly SqlExpressionVisitor _visitor = new();
     protected readonly Table Table;
 
-    public QueryBuilder() 
-    { 
-      Table = TableFactory.GetOrCreateTableDefinition<T>();
+    public QueryBuilder(ITableFactory factory)
+    {
+      Table = factory.GetOrCreateTable<T>();
     }
 
     public IQueryBuilder<T> Where(Expression<Func<T, bool>> predicate)
@@ -58,15 +58,8 @@ namespace Orm.Querying.Builders
 
     protected string GetColumnNameFromExpression<TProperty>(Expression<Func<T, TProperty>> expression)
     {
-      var propName = GetPropertyFromExpression(expression).Name;
+      var propName = ExpressionUtil.GetProperty(expression).Name;
       return Table.Columns.FirstOrDefault(c => c.Name == propName).Alias;
-    }
-
-    protected static PropertyInfo GetPropertyFromExpression<TProperty>(Expression<Func<T, TProperty>> expression)
-    {
-      return (expression.Body as MemberExpression)?.Member is PropertyInfo prop
-          ? prop
-          : throw new InvalidOperationException("Please provide a valid property expression.");
     }
   }
 }

@@ -1,8 +1,10 @@
-﻿namespace Orm.Querying.Builders
+﻿using Orm.Factories;
+
+namespace Orm.Querying.Builders
 {
-  public class DeleteQueryBuilder<T> : QueryBuilder<T>
+  internal class DeleteQueryBuilder<T> : QueryBuilder<T>
   {
-    public DeleteQueryBuilder()
+    public DeleteQueryBuilder(ITableFactory factory) : base(factory)
     {
       _sb.Append("DELETE");
       AppendFrom();
