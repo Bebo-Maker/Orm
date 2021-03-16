@@ -90,7 +90,7 @@ SELECT Name, Age, Address FROM PersonTable WHERE Id > 1 AND Age = 10 ORDER BY Id
 You dont wanna use expressions or execute a complex query?
 Just use query with a raw SQL statement.
 ```csharp
-var results = db.Select<Person>("SELECT Name, Age, Address FROM PersonTable WHERE Id > 1");
+var results = db.ExecuteReader<Person>("SELECT Name, Age, Address FROM PersonTable WHERE Id > 1");
 ```
 
 ### Insert
@@ -128,4 +128,26 @@ public class Person
 }
 
 var results = db.Select<Person>();
+```
+### Available methods
+```csharp
+
+List<T> ExecuteReader<T>(string sql);
+Task<List<T>> ExecuteReaderAsync<T>(string sql);
+
+List<T> Select<T>(Action<IQueryBuilder<T>> action = null);
+Task<List<T>> SelectAsync<T>(Action<IQueryBuilder<T>> action = null);
+
+List<T> SelectDistinct<T>(Action<IQueryBuilder<T>> action = null);
+Task<List<T>> SelectDistinctAsync<T>(Action<IQueryBuilder<T>> action = null);
+
+int Insert<T>(T entity, Action<IQueryBuilder<T>> action = null);
+Task<int> InsertAsync<T>(T entity, Action<IQueryBuilder<T>> action = null);
+
+int Update<T>(T entity, Action<IQueryBuilder<T>> action = null);
+Task<int> UpdateAsync<T>(T entity, Action<IQueryBuilder<T>> action = null);
+
+int Delete<T>(Action<IQueryBuilder<T>> action = null);
+Task<int> DeleteAsync<T>(Action<IQueryBuilder<T>> action = null);
+
 ```
