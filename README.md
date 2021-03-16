@@ -59,15 +59,13 @@ var db = new DatabaseBuilder().WithConnection(() => new SqlConnection("YourConne
                               .Build();
 ```
 
-### Running queries
-You can run queries by creating a Database object.
-This database object will take care of opening and closing connections, running your queries etc.
+### Database
+`IDatabase` will take care of opening and closing your connections and executing your queries.
 It is intended to be shared across the application.
-For example:
+You can create a `IDatabase` by using the `DatabaseBuilder`.
 ```csharp
 var db = new DatabaseBuilder().WithConnection(() => new SqlConnection("YourConnectionString"))
                               .Build();
-//Run your queries here.
 ```
 ### Select
 ```csharp
@@ -86,8 +84,7 @@ which will result in the following SQL Statement under the hood:
 ```sql
 SELECT Name, Age, Address FROM PersonTable WHERE Id > 1 AND Age = 10 ORDER BY Id ASC
 ```
-
-### Raw SQL
+### SQL
 You dont wanna use expressions or execute a complex query?
 Just use query with a raw SQL statement.
 ```csharp
