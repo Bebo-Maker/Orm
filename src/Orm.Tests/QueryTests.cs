@@ -9,7 +9,7 @@ namespace Orm.Tests
     [Test]
     public void QueryTest()
     {
-      var results = Connection.Query<TestData>(b => b.Where(t => t.Id > 1).OrderBy(a => a.Id));
+      var results = Db.Select<TestData>(b => b.Where(t => t.Id > 1).OrderBy(a => a.Id));
 
       Assert.IsFalse(results.Any(a => a.Id < 2));
     }
@@ -17,12 +17,9 @@ namespace Orm.Tests
     [Test]
     public void QueryDistinctTest()
     {
-      var results = Connection.QueryDistinct<TestData>();
+      var results = Db.SelectDistinct<TestData>();
 
       Assert.IsTrue(results.Count > 0);
     }
-
-    [TearDown]
-    public void TearDown() => Connection.Dispose();
   }
 }

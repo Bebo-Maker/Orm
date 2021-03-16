@@ -1,18 +1,16 @@
 ﻿using NUnit.Framework;
-using System.Data;
-using System.Data.SqlClient;
+using Orm.Entities;
 
 namespace Orm.Tests
 {
   public class DbTest
   {
-    protected IDbConnection Connection { get; private set; }
+    protected IDatabase Db { get; private set; }
 
     [SetUp]
     public void Setup()
     {
-      Connection = new SqlConnection(@"Server=localhost\SQLEXPRESS;Database=TestDB;Trusted_Connection=True;");
-      Connection.Open();
+      Db = new Database(Connection.Provider);
     }
   }
 }

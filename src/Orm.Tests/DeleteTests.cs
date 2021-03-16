@@ -12,9 +12,9 @@ namespace Orm.Tests
     [Test]
     public void DeleteTest()
     {
-      Connection.Insert(Create());
+      Db.Insert(Create());
 
-      int affected = Connection.Delete<TestData>(a => a.Where(t => t.Id == ID));
+      int affected = Db.Delete<TestData>(a => a.Where(t => t.Id == ID));
 
       Assert.IsTrue(affected == 1);
     }
@@ -22,9 +22,9 @@ namespace Orm.Tests
     [Test]
     public async Task DeleteAsyncTest()
     {
-      await Connection.InsertAsync(Create());
+      await Db.InsertAsync(Create());
 
-      int affected = await Connection.DeleteAsync<TestData>(a => a.Where(t => t.Id == ID));
+      int affected = await Db.DeleteAsync<TestData>(a => a.Where(t => t.Id == ID));
 
       Assert.IsTrue(affected == 1);
     }

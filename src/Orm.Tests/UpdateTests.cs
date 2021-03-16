@@ -15,29 +15,29 @@ namespace Orm.Tests
     [Test]
     public void UpdateTest()
     {
-      Connection.Delete<TestData>(q => q.Where(a => a.Id == ID));
-      Connection.Insert(Create());
-      var entity = Connection.Query<TestData>(q => q.Where(a => a.Id == ID)).FirstOrDefault();
+      Db.Delete<TestData>(q => q.Where(a => a.Id == ID));
+      Db.Insert(Create());
+      var entity = Db.Select<TestData>(q => q.Where(a => a.Id == ID)).FirstOrDefault();
       entity.Name = NAME_AFTER;
 
-      Connection.Update(entity, q => q.Where(d => d.Id == entity.Id));
+      Db.Update(entity, q => q.Where(d => d.Id == entity.Id));
 
-      var entityAfter = Connection.Query<TestData>(q => q.Where(a => a.Id == ID)).FirstOrDefault();
+      var entityAfter = Db.Select<TestData>(q => q.Where(a => a.Id == ID)).FirstOrDefault();
       Assert.That(entityAfter.Name == NAME_AFTER);
     }
 
     [Test]
     public async Task UpdateAsyncTest()
     {
-      await Connection.DeleteAsync<TestData>(q => q.Where(a => a.Id == ID));
-      await  Connection.InsertAsync(Create());
-      var entities = await Connection.QueryAsync<TestData>(q => q.Where(a => a.Id == ID));
+      await Db.DeleteAsync<TestData>(q => q.Where(a => a.Id == ID));
+      await Db.InsertAsync(Create());
+      var entities = await Db.SelectAsync<TestData>(q => q.Where(a => a.Id == ID));
       var entity = entities.FirstOrDefault();
       entity.Name = NAME_AFTER;
 
-      await Connection.UpdateAsync(entity, q => q.Where(d => d.Id == entity.Id));
+      await Db.UpdateAsync(entity, q => q.Where(d => d.Id == entity.Id));
 
-      var entitiesAfter = await Connection.QueryAsync<TestData>(q => q.Where(a => a.Id == ID));
+      var entitiesAfter = await Db.SelectAsync<TestData>(q => q.Where(a => a.Id == ID));
       Assert.That(entitiesAfter.First().Name == NAME_AFTER);
     }
 
