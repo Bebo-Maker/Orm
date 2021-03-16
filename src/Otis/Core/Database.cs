@@ -1,10 +1,9 @@
-﻿using Otis.Core;
-using Otis.Factories;
+﻿using Otis.Factories;
 using Otis.ObjectCreator;
 
-namespace Otis
+namespace Otis.Core
 {
-  public partial class Database : IDatabase
+  internal partial class Database : IDatabase
   {
     private readonly Engine _engine;
     private readonly IDatabaseProvider _provider;

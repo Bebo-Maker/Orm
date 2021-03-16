@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Otis
+namespace Otis.Core
 {
-  public partial class Database
+  internal partial class Database
   {
     public T SelectById<T, TIdentifier>(TIdentifier identifier)
     {

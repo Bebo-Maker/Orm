@@ -3,9 +3,9 @@ using Otis.Querying;
 using System;
 using System.Threading.Tasks;
 
-namespace Otis
+namespace Otis.Core
 {
-  public partial class Database
+  internal partial class Database
   {
     public int Delete<T>(Action<IQueryBuilder<T>> action)
     {

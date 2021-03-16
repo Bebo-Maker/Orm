@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using Otis.Configuration;
 using Otis.Entities;
+using System.Data.SqlClient;
 
 namespace Otis.Tests
 {
@@ -20,17 +21,14 @@ namespace Otis.Tests
 
   public class MappingTest
   {
-    private Database _db;
+    private IDatabase _db;
 
     [SetUp]
     public void Setup()
     {
-      var maps = new EntityMap[]
-      {
-        new TestDataMap()
-      };
-
-      _db = new Database(Connection.Provider, new DatabaseConfiguration(maps));
+      _db = new DatabaseBuilder().WithConnection(Infrastructure.GetConnection)
+                                 .WithMap(new TestDataMap())
+                                 .Build();
     }
 
     [Test]
