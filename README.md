@@ -14,27 +14,26 @@ public class Person
 }
 ```
 ### Running queries
-Querying is provided by using Extensions for the [IDbConnection](https://docs.microsoft.com/en-us/dotnet/api/system.data.idbconnection?view=net-5.0) Interface.
+You can run queries by creating a Database object.
+This database object will take care of opening and closing connections, running your queries etc.
+It is intended to be shared across the application.
 For example:
 ```csharp
-using(var conn = new SqlConnection("YourConnectionString")
-{
-	conn.Open();
-	// Run your queries here.
-}
+var db = new Database(new SqlConnection("YourConnectionString"));
+//Run your queries here.
 ```
 ### Query
 ```csharp
-var results = conn.Query<Person>();
+var results = db.Query<Person>();
 ```
 ### QueryAsync
 ```csharp
-var results = await conn.QueryAsync<Person>();
+var results = await db.QueryAsync<Person>();
 ```
 ### Filtering
 Use expressions to add additional conditions (WHERE, ORDER BY, ...)
 ```csharp
-var results = conn.Query<Person>(b => b.Where(p => p.Id > 1 && p.Age == 10).OrderBy(a => a.Id));
+var results = db.Query<Person>(b => b.Where(p => p.Id > 1 && p.Age == 10).OrderBy(a => a.Id));
 ```
 which will result in the following SQL Statement under the hood:
 ```sql
@@ -45,20 +44,20 @@ SELECT Name, Age, Address FROM PersonTable WHERE Id > 1 AND Age = 10 ORDER BY Id
 You dont wanna use expressions or execute a complex query?
 Just use query with a raw SQL statement.
 ```csharp
-var results = conn.Query<Person>("SELECT Name, Age, Address FROM PersonTable WHERE Id > 1");
+var results = db.Query<Person>("SELECT Name, Age, Address FROM PersonTable WHERE Id > 1");
 ```
 
 ### Insert
 ```csharp
 var person = new Person { Name = "Alex", Age = 32, Address = "Address" };
-int rowsAffected = conn.Insert(person);
+int rowsAffected = db.Insert(person);
 ```
 
 ### Update
 ```csharp
-var person = conn.Query<Person>(q => q.Where(p => p.Id == 4)).FirstOrDefault();
+var person = db.Query<Person>(q => q.Where(p => p.Id == 4)).FirstOrDefault();
 person.Age = 44;
-int rowsAffected = conn.Update(person, q => q.Where(p => p.Id == 4));
+int rowsAffected = db.Update(person, q => q.Where(p => p.Id == 4));
 ```
 
 ### Immutability
@@ -82,5 +81,5 @@ public class Person
   }
 }
 
-var results = conn.Query<Person>();
+var results = db.Query<Person>();
 ```
