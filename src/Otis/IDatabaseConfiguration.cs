@@ -5,6 +5,6 @@ namespace Otis
 {
   public interface IDatabaseConfiguration
   {
-    IReadOnlyList<EntityMap> Mappings { get; }
+    IEnumerable<EntityMap> Mappings { get; }
   }
 }
