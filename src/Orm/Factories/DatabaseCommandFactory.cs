@@ -1,26 +1,42 @@
 ﻿using Orm.Entities;
 using Orm.Extensions;
-using Orm.Reflection;
 using System;
 using System.Data;
 using System.Data.Common;
 
 namespace Orm.Factories
 {
-  public class DbFactory
+  internal class DatabaseCommandFactory
   {
+    private readonly ITableFactory _factory;
+    private readonly IDatabaseProvider _provider;
+
+    public DatabaseCommandFactory(ITableFactory factory, IDatabaseProvider provider)
+    {
+      _factory = factory;
+      _provider = provider;
+    }
+    
+    public DbConnection TryCreateAsyncConnection()
+    {
+      if (_provider.CreateConnection() is DbConnection connection)
+        return connection;
+
+      throw new InvalidOperationException($"{typeof(IDbConnection).Name} has to be {typeof(DbConnection).Name}");
+    }
+
     public static IDbCommand CreateCommand(IDbConnection connection, string sqlStatement)
     {
       var command = connection.CreateCommand();
       command.CommandText = sqlStatement;
-      
+
       return command;
     }
 
-    public static IDbCommand CreateCommandWithParameters<T>(IDbConnection connection, string sqlStatement, T entity)
+    public IDbCommand CreateCommandWithParameters<T>(IDbConnection connection, string sqlStatement, T entity)
     {
       var command = CreateCommand(connection, sqlStatement);
-      var columns = TableFactory.GetOrCreateTableDefinition<T>().Columns;
+      var columns = _factory.GetOrCreateTable<T>().Columns;
       AttachParams(command, columns, entity);
       return command;
     }
@@ -29,17 +45,17 @@ namespace Orm.Factories
     {
       var cmd = connection.CreateCommand();
       if (cmd is not DbCommand command)
-        throw new InvalidOperationException($"{cmd} has to be DbCommand");
+        throw new InvalidOperationException($"{typeof(IDbCommand).Name} has to be {typeof(DbCommand).Name}");
 
       command.CommandText = sqlStatement;
 
       return command;
     }
 
-    public static DbCommand TryCreateAsyncCommandWithParameters<T>(IDbConnection connection, string sqlStatement, T entity)
+    public DbCommand TryCreateAsyncCommandWithParameters<T>(IDbConnection connection, string sqlStatement, T entity)
     {
       var command = TryCreateAsyncComand(connection, sqlStatement);
-      var columns = TableFactory.GetOrCreateTableDefinition<T>().Columns;
+      var columns = _factory.GetOrCreateTable<T>().Columns;
       AttachParams(command, columns, entity);
       return command;
     }

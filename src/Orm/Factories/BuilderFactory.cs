@@ -6,11 +6,18 @@ namespace Orm.Factories
 {
   internal class BuilderFactory
   {
-    public static string CreateSelectBuilder<T>(Action<IQueryBuilder<T>> action) => BuildBuilder(action, new SelectQueryBuilder<T>());
-    public static string CreateSelectDistinctBuilder<T>(Action<IQueryBuilder<T>> action) => BuildBuilder(action, new SelectDistinctQueryBuilder<T>());
-    public static string CreateDeleteBuilder<T>(Action<IQueryBuilder<T>> action) => BuildBuilder(action, new DeleteQueryBuilder<T>());
-    public static string CreateInsertBuilder<T>(Action<IQueryBuilder<T>> action) => BuildBuilder(action, new InsertQueryBuilder<T>());
-    public static string CreateUpdateBuilder<T>(Action<IQueryBuilder<T>> action) => BuildBuilder(action, new UpdateQueryBuilder<T>());
+    private readonly ITableFactory _factory;
+
+    public BuilderFactory(ITableFactory factory)
+    {
+      _factory = factory;
+    }
+
+    public string CreateSelectBuilder<T>(Action<IQueryBuilder<T>> action) => BuildBuilder(action, new SelectQueryBuilder<T>(_factory));
+    public string CreateSelectDistinctBuilder<T>(Action<IQueryBuilder<T>> action) => BuildBuilder(action, new SelectDistinctQueryBuilder<T>(_factory));
+    public string CreateDeleteBuilder<T>(Action<IQueryBuilder<T>> action) => BuildBuilder(action, new DeleteQueryBuilder<T>(_factory));
+    public string CreateInsertBuilder<T>(Action<IQueryBuilder<T>> action) => BuildBuilder(action, new InsertQueryBuilder<T>(_factory));
+    public string CreateUpdateBuilder<T>(Action<IQueryBuilder<T>> action) => BuildBuilder(action, new UpdateQueryBuilder<T>(_factory));
 
     private static string BuildBuilder<T>(Action<IQueryBuilder<T>> action, QueryBuilder<T> builder)
     {
