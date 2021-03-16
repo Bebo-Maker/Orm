@@ -1,5 +1,5 @@
 # Otis
-A simple ORM, just for fun.
+A micro ORM.
 
 # Usage
 ### Entity
