@@ -7,11 +7,11 @@ namespace Orm
 {
   public interface IDatabase
   {
-    List<T> Select<T>(Action<IQueryBuilder<T>> action = null);
-    List<T> Select<T>(string sql);
+    List<T> ExecuteReader<T>(string sql);
+    Task<List<T>> ExecuteReaderAsync<T>(string sql);
 
+    List<T> Select<T>(Action<IQueryBuilder<T>> action = null);
     Task<List<T>> SelectAsync<T>(Action<IQueryBuilder<T>> action = null);
-    Task<List<T>> SelectAsync<T>(string sql);
 
     List<T> SelectDistinct<T>(Action<IQueryBuilder<T>> action = null);
     Task<List<T>> SelectDistinctAsync<T>(Action<IQueryBuilder<T>> action = null);
