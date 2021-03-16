@@ -75,6 +75,37 @@ var results = db.Select<Person>();
 ```csharp
 var results = await db.SelectAsync<Person>();
 ```
+### Insert
+```csharp
+var person = new Person { Name = "Alex", Age = 32, Address = "Address" };
+int rowsAffected = db.Insert(person);
+```
+### InsertAsync
+```csharp
+var person = new Person { Name = "Alex", Age = 32, Address = "Address" };
+int rowsAffected = await db.InsertAsync(person);
+```
+### Update
+```csharp
+var person = db.Select<Person>(q => q.Where(p => p.Id == 4)).FirstOrDefault();
+person.Age = 44;
+int rowsAffected = db.Update(person, q => q.Where(p => p.Id == 4));
+```
+### UpdateAsync
+```csharp
+var persons = await db.SelectAsync<Person>(q => q.Where(p => p.Id == 4));
+var person = persons.FirstOrDefault();
+person.Age = 44;
+int rowsAffected = await db.UpdateAsync(person, q => q.Where(p => p.Id == 4));
+```
+### Delete
+```csharp
+int rowsAffected = db.Delete<Person>(b => b.Where(p => p.Id == 1));
+```
+### DeleteAsync
+```csharp
+int rowsAffected = await db.DeleteAsync<Person>(b => b.Where(p => p.Id == 1));
+```
 ### Filtering
 Use expressions to add additional conditions (WHERE, ORDER BY, ...)
 ```csharp
@@ -89,19 +120,6 @@ You dont wanna use expressions or execute a complex query?
 Just use query with a raw SQL statement.
 ```csharp
 var results = db.ExecuteReader<Person>("SELECT Name, Age, Address FROM PersonTable WHERE Id > 1");
-```
-
-### Insert
-```csharp
-var person = new Person { Name = "Alex", Age = 32, Address = "Address" };
-int rowsAffected = db.Insert(person);
-```
-
-### Update
-```csharp
-var person = db.Select<Person>(q => q.Where(p => p.Id == 4)).FirstOrDefault();
-person.Age = 44;
-int rowsAffected = db.Update(person, q => q.Where(p => p.Id == 4));
 ```
 
 ### Immutability
