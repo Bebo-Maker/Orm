@@ -4,8 +4,10 @@ A simple ORM, just for fun.
 # Usage
 ### Entity
 There are two approaches for mapping your Entities.
-##### Attribute based approach
+#### Attribute based approach
 ```csharp
+using Orm.Attributes;
+
 [Table("PersonTable")]
 public class Person
 {
@@ -23,7 +25,7 @@ public class Person
   public bool IsAlive { get; set; }
 }
 ```
-##### Configuration based approach
+#### Configuration based approach
 ```csharp
 public class Person
 {
@@ -33,6 +35,10 @@ public class Person
   public string Address { get; set; }
   public bool IsAlive { get; set; }
 }
+
+// ...
+
+using Orm.Configuration;
 
 public class PersonMapping : EntityMap<Person> 
 {
