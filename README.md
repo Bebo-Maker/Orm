@@ -3,16 +3,56 @@ A simple ORM, just for fun.
 
 # Usage
 ### Entity
+There are two approaches for mapping your Entities.
+##### Attribute based approach
 ```csharp
 [Table("PersonTable")]
+public class Person
+{
+  [PrimaryKey] // Use this property as the primary key of the table.
+  public int Id { get; set; }
+  
+  public string Name { get; set; }
+  
+  public int Age { get; set; }
+ 
+  [Column("AddressAlias")] // Defines a alias for the property.
+  public string Address { get; set; }
+  
+  [Ignore] // This property will be ignored.
+  public bool IsAlive { get; set; }
+}
+```
+##### Configuration based approach
+```csharp
 public class Person
 {
   public int Id { get; set; }
   public string Name { get; set; }
   public int Age { get; set; }
   public string Address { get; set; }
+  public bool IsAlive { get; set; }
+}
+
+public class PersonMapping : EntityMap<Person> 
+{
+  public PersonMapping() 
+  {
+    Alias("PersonTable") // Set an alias for the table
+    
+    Map(p => p.Id).AsPrimaryKey(); // Use this property as the primary key.
+    Map(p => p.Name);
+    Map(p => p.Age).WithAlias("AddressAlias"); // Defines a alias for this property.
+    Map(p => p.Name);
+  }
 }
 ```
+Pass your mappings in the database constructor
+```csharp
+var maps = new EntityMap[] { new PersonMapping() };
+var db = new Database(new SqlConnection("YourConnectionString"), maps);
+```
+
 ### Running queries
 You can run queries by creating a Database object.
 This database object will take care of opening and closing connections, running your queries etc.
@@ -22,13 +62,13 @@ For example:
 var db = new Database(new SqlConnection("YourConnectionString"));
 //Run your queries here.
 ```
-### Query
+### Select
 ```csharp
-var results = db.Query<Person>();
+var results = db.Select<Person>();
 ```
-### QueryAsync
+### SelectAsync
 ```csharp
-var results = await db.QueryAsync<Person>();
+var results = await db.SelectAsync<Person>();
 ```
 ### Filtering
 Use expressions to add additional conditions (WHERE, ORDER BY, ...)
@@ -44,7 +84,7 @@ SELECT Name, Age, Address FROM PersonTable WHERE Id > 1 AND Age = 10 ORDER BY Id
 You dont wanna use expressions or execute a complex query?
 Just use query with a raw SQL statement.
 ```csharp
-var results = db.Query<Person>("SELECT Name, Age, Address FROM PersonTable WHERE Id > 1");
+var results = db.Select<Person>("SELECT Name, Age, Address FROM PersonTable WHERE Id > 1");
 ```
 
 ### Insert
@@ -55,7 +95,7 @@ int rowsAffected = db.Insert(person);
 
 ### Update
 ```csharp
-var person = db.Query<Person>(q => q.Where(p => p.Id == 4)).FirstOrDefault();
+var person = db.Select<Person>(q => q.Where(p => p.Id == 4)).FirstOrDefault();
 person.Age = 44;
 int rowsAffected = db.Update(person, q => q.Where(p => p.Id == 4));
 ```
@@ -81,5 +121,5 @@ public class Person
   }
 }
 
-var results = db.Query<Person>();
+var results = db.Select<Person>();
 ```
