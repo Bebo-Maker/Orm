@@ -79,7 +79,7 @@ var results = await db.SelectAsync<Person>();
 ### Filtering
 Use expressions to add additional conditions (WHERE, ORDER BY, ...)
 ```csharp
-var results = db.Query<Person>(b => b.Where(p => p.Id > 1 && p.Age == 10).OrderBy(a => a.Id));
+var results = db.Select<Person>(b => b.Where(p => p.Id > 1 && p.Age == 10).OrderBy(a => a.Id));
 ```
 which will result in the following SQL Statement under the hood:
 ```sql
