@@ -9,12 +9,7 @@ namespace Otis.Benchmarks
   {
     private const string SelectAllFromTestTable = "SELECT [Name],[Id],[Datetime],[Number],[LongText] FROM[TestDB].[dbo].[TestTable]";
 
-    private readonly IDatabase _db;
-
-    public QueryBenchmarks()
-    {
-      _db = new Database(Connection.Provider);
-    }
+    private readonly IDatabase _db = Infrastructure.Database;
 
     [Benchmark]
     public List<TestData> QueryProperties() => _db.ExecuteReader<TestData>(SelectAllFromTestTable);

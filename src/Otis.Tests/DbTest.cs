@@ -10,7 +10,7 @@ namespace Otis.Tests
     [SetUp]
     public void Setup()
     {
-      Db = new Database(Connection.Provider);
+      Db = Infrastructure.Database;
     }
   }
 }
