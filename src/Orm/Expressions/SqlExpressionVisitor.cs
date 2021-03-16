@@ -47,7 +47,7 @@ namespace Orm.Expressions
       Visit(node.Left);
       _sb.Append(_expressionTypeToSqlOperands[node.NodeType]);
       Visit(node.Right);
-      
+
       return node;
     }
 
