@@ -5,7 +5,7 @@ A micro ORM.
 There are two approaches for mapping your Entities.
 ### Attribute based approach
 ```csharp
-using Orm.Attributes;
+using Otis.Attributes;
 
 [Table("PersonTable")]
 public class Person
@@ -37,7 +37,7 @@ public class Person
 
 // ...
 
-using Orm.Configuration;
+using Otis.Configuration;
 
 public class PersonMap : EntityMap<Person> 
 {
